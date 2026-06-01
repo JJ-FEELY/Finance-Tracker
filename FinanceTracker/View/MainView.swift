@@ -10,12 +10,16 @@ import SwiftData
 enum routes: Hashable {
     case addClient
     case clientDetails(id: UUID)
+    case addTransaction
+    case transactionDetails(Transaction)
 }
 struct MainView: View {
     @StateObject private var clientVM = ClientViewModel()
     @StateObject private var contentVM = ContentViewModel()
+   
     
     @State var clientRoute: [routes]  = []
+    @State var transactionRoute: [routes]  = []
     
     var body: some View {
         
@@ -26,7 +30,21 @@ struct MainView: View {
             }
             
             Tab("Transactions", systemImage: "list.bullet") {
-                NavigationStack{ TransactionView()}
+                NavigationStack(path: $transactionRoute){
+                    TransactionView(path: $transactionRoute)
+                        .navigationDestination(for: routes.self) { route in
+                            switch route {
+                            case .addTransaction:
+                                AddTransactionView(viewModel: AddTransactionViewModel(), path: $transactionRoute)
+                                    .toolbar(.hidden, for: .tabBar)
+                            case .transactionDetails(let transaction):
+                                TransactionDetailsView(transaction: transaction, path: $transactionRoute)
+                                    .toolbar(.hidden, for: .tabBar)
+                            default:
+                                EmptyView()
+                            }
+                        }
+                }
             }
             
             Tab("Clients", systemImage: "person.3") {
@@ -35,10 +53,14 @@ struct MainView: View {
                         .navigationDestination(for: routes.self) { route in
                             switch route {
                             case .addClient:
-                                AddClientView()
+                                AddClientView(viewModel: AddClientViewModel(), path: $clientRoute)
                                     .toolbar(.hidden, for: .tabBar)
                             case .clientDetails(let id):
-                                Text("Client \(id)")
+                                ClientDetailsView(viewModel: ClientDetailsViewModel(id: id), path: $clientRoute)
+                                    .toolbar(.hidden, for: .tabBar)
+                            default:
+                                EmptyView()
+                            
                             }
                         }
                 }

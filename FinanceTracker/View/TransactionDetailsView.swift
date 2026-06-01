@@ -15,6 +15,7 @@ struct TransactionDetailsView: View {
     @State private var showDeleteConfirmation = false
 
     @Query(sort: \Client.firstName) private var clients: [Client]
+    @Query(sort: \Category.name) private var category: [Category]
 
     var body: some View {
         Form {
@@ -42,7 +43,20 @@ struct TransactionDetailsView: View {
             Section {
                 Toggle("Recurring", isOn: $transaction.isReccuring)
             }
+            
+            Picker("Category", selection: $transaction.category) {
+                Text("None").tag(nil as Category?)
+                ForEach(category) { category in
+                    HStack {
+                        Text(category.name)
+                        Spacer()
+                        Image(systemName: category.icon)
+                    }
+                    .tag(category as Category?)
+                }
+            }
 
+            
             Picker("Client", selection: $transaction.client) {
                 Text("None").tag(nil as Client?)
                 ForEach(clients) { client in
@@ -85,3 +99,4 @@ struct TransactionDetailsView: View {
         }
     }
 }
+

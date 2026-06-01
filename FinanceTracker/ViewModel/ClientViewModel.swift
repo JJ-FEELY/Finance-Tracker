@@ -13,9 +13,6 @@ class ClientViewModel: ObservableObject{
     private let context = PersistenceController.shared.context
     
     
-    init(){
-       
-    }
     
         
 }

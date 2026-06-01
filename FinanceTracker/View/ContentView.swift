@@ -66,7 +66,7 @@ struct ContentView: View {
                 .foregroundStyle(.secondary)
             Text(netProfit, format: .currency(code: "GBP"))
                 .font(.system(size: 42, weight: .bold, design: .rounded))
-                .foregroundStyle(netProfit >= 0 ? .primary : .red)
+                .foregroundStyle(netProfit >= 0 ? Color.primary : Color.red)
         }
         .frame(maxWidth: .infinity)
         .padding(.top)

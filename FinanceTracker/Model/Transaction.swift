@@ -18,6 +18,7 @@ class Transaction: Identifiable {
     var date: Date
     var note: String?
     var isReccuring: Bool
+    
 
     @Relationship var category: Category?
     @Relationship var client: Client?

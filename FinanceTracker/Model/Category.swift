@@ -33,6 +33,6 @@ extension Category {
         Category(name: "Healthcare",  colorHex: "#96CEB4", icon: "heart.fill"),
         Category(name: "Salary",      colorHex: "#88D8B0", icon: "banknote.fill"),
         Category(name: "Shopping",    colorHex: "#FFEAA7", icon: "bag.fill"),
-        Category(name: "Savings",     colorHex: "#DDA0DD", icon: "piggybank.fill")
+        Category(name: "Savings",     colorHex: "#DDA0DD", icon: "building.columns.fill")
     ]
 }
