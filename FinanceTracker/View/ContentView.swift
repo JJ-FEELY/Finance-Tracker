@@ -11,38 +11,45 @@ import SwiftData
 struct ContentView: View {
     
     @Environment(\.modelContext) private var modelContext
-    @StateObject private var viewModel = ContentViewModel()
-    
+    @ObservedObject var viewModel: ContentViewModel
 
+    @Query private var businessIncome: [Transaction]
+    @Query private var businessExpenses: [Transaction]
+
+    init(viewModel: ContentViewModel) {
+        let incomeType = TransactionType.income
+        let expenseType = TransactionType.expense
+        let businessScope = TransactionScope.business
+
+        let incomePredicate = #Predicate<Transaction> { transaction in
+            transaction.type == incomeType && transaction.transactionScope == businessScope
+        }
+        let expensePredicate = #Predicate<Transaction> { transaction in
+            transaction.type == expenseType && transaction.transactionScope == businessScope
+        }
+
+        _businessIncome = Query(filter: incomePredicate, sort: \.date, order: .reverse)
+        _businessExpenses = Query(filter: expensePredicate)
+
+        self.viewModel = viewModel
+    }
+    
+    var netProfit: Decimal {
+        let income = businessIncome.reduce(Decimal(0)) { $0 + $1.amount }
+        let expenses = businessExpenses.reduce(Decimal(0)) { $0 + $1.amount }
+        return income - expenses
+    }
+    
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(viewModel.items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: viewModel.deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: viewModel.addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
+        ScrollView{
+            Text("This Month")
+                .font(.caption)
+                .foregroundStyle(.gray)
+            Text("£\(netProfit)")
+                .font(Font.largeTitle)
+                .fontWeight(.semibold)
         }
     }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
-}

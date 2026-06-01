@@ -14,7 +14,7 @@ struct FinanceTrackerApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
         }
         .modelContainer(persistence.container)
     }

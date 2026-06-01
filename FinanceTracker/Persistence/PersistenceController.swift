@@ -16,7 +16,11 @@ class PersistenceController{
     init() {
         
         let schema = Schema([
-            Item.self
+            TaxSettings.self,
+            Transaction.self,
+            Client.self,
+            Category.self
+
         ])
         
         let config = ModelConfiguration(
@@ -30,8 +34,19 @@ class PersistenceController{
         }catch{
             fatalError("Could not create ModelContainer: \(error)")
         }
+        
+        seedDefaultCategoriesIfNeeded()
+    }
+    
+    func seedDefaultCategoriesIfNeeded() {
+        let descriptor = FetchDescriptor<Category>()
+        let existing = (try? context.fetch(descriptor)) ?? []
+        
+        guard existing.isEmpty else { return }  // ✅ only seeds once
+        
+        Category.defaults.forEach { context.insert($0) }
+        try? context.save()
     }
 
-    
-    
 }
+
