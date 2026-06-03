@@ -12,6 +12,7 @@ enum routes: Hashable {
     case clientDetails(id: UUID)
     case addTransaction
     case transactionDetails(Transaction)
+    
 }
 struct MainView: View {
     @StateObject private var clientVM = ClientViewModel()
@@ -46,6 +47,11 @@ struct MainView: View {
                         }
                 }
             }
+            
+            Tab("Tax", systemImage: "percent") {
+                NavigationStack(){ TaxView(viewModel: TaxViewModel())}
+            }
+
             
             Tab("Clients", systemImage: "person.3") {
                 NavigationStack(path: $clientRoute){

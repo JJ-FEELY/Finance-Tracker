@@ -16,13 +16,18 @@ class TransactionDetailsViewModel: ObservableObject{
     
     @Published var transaction: Transaction?
     
+    
     var defualtNoTitle = "No Title"
     init(id: UUID) {
         self.id = id
         fetchTransaction()
     }
     
-    func deleteClient(){
+    func saveTransaction(){
+        
+    }
+    
+    func deleteTransaction(){
         let id = self.id
         
         let descriptor = FetchDescriptor<Transaction>(

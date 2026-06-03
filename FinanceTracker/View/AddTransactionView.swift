@@ -14,11 +14,13 @@ struct AddTransactionView: View {
     @Query(sort: \Client.id) private var clients: [Client]
     @Query(sort: \Category.name) private var category: [Category]
     
+    @State var showError: Bool = false
+    
     var body: some View {
         Form {
             Section("Details") {
-                TextField("Title", text: $viewModel.title)
-                TextField("Amount", value: $viewModel.amount, format: .currency(code: "GBP"))
+                TextField("Title*", text: $viewModel.title)
+                TextField("Amount*", value: $viewModel.amount, format: .currency(code: "GBP"))
                     .keyboardType(.decimalPad)
                 DatePicker("Date", selection: $viewModel.date, displayedComponents: .date)
             }
@@ -52,7 +54,7 @@ struct AddTransactionView: View {
                     .tag(category as Category?)
                 }
             }
-
+            
             
             Picker("Client", selection: $viewModel.selectedClient) {
                 Text("None").tag(nil as Client?)
@@ -60,10 +62,19 @@ struct AddTransactionView: View {
                     Text("\(client.firstName) \(client.lastName)").tag(client as Client?)
                 }
             }
-
+            if showError == true{
+                Text(("Please ensure all required fields are filled out"))
+                    .foregroundStyle(.red)
+                    .font(.caption)
+            }
             Section {
+                
                 Button("Create") {
-                    viewModel.saveTransaction()
+                    if !viewModel.isFormValid{
+                        showError = true
+                    }else{
+                        viewModel.saveTransaction()
+                    }
                 }
             }
             

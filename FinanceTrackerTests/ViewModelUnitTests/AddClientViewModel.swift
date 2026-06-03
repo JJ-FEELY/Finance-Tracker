@@ -108,7 +108,6 @@ struct AddClientViewModelTests {
         try removeClients(firstName: markerB)
     }
 
-    // MARK: - Helpers
 
     private func fetchClients(firstName: String) throws -> [Client] {
         let context = PersistenceController.shared.context

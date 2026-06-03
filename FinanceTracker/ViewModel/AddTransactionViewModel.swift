@@ -24,7 +24,13 @@ class AddTransactionViewModel: ObservableObject{
     @Published var isReccuring: Bool = false
     @Published var saveSuccess: Bool = false
         
+    var isFormValid: Bool {
+        !title.isEmpty &&
+        amount != 0.0
+    }
+    
     func saveTransaction() {
+        
         let newTransaction =
         Transaction(
             id: UUID(),
